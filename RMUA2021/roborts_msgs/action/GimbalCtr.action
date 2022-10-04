@@ -1,0 +1,9 @@
+# Define the goal
+bool goal
+float64 angle
+---
+# Define the result
+bool isok
+---
+# Define a feedback message
+bool isrun

@@ -1,0 +1,4 @@
+uint8 patorl = 1
+uint8 escape = 2
+---
+bool result

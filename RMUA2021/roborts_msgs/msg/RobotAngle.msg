@@ -1,0 +1,2 @@
+float64 self_threa
+float64 enemy_threa

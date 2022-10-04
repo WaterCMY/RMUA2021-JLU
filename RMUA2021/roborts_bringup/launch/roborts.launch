@@ -1,0 +1,53 @@
+<launch>
+  <master auto="start"/>
+  <arg name="map" value="truemap"/>
+  <arg name="map0" value="truemap0"/>
+
+  <!-- Run the init pose -->
+  <node pkg="buff_infomation" type="set_initialpose" name="set_initialpose" respawn="true" />
+
+  <!--Load parameters for localization node  -->
+  <rosparam command="load" file="$(find roborts_localization)/config/localization.yaml" />
+  <rosparam command="load" file="$(find roborts_localization)/amcl/config/amcl.yaml" />
+
+  <!-- Run the robot sdk interface -->
+  <include file="$(find roborts_bringup)/launch/base.launch" />
+
+  <!-- Publish static tf -->
+  <include file="$(find roborts_bringup)/launch/static_tf.launch" />
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find roborts_bringup)/maps/$(arg map).yaml" respawn="true" />
+
+  <!-- Run the map server -->
+  <node name="map_server0" pkg="map_server" type="map_server" args="$(find roborts_bringup)/maps/$(arg map0).yaml" respawn="true" >
+  <remap from="/map" to="/map0"/>
+  </node>
+
+  <!-- Run the lidar node -->
+  <node name="rplidar_node" pkg="rplidar_ros" type="rplidarNode" output="screen" respawn="true" >
+      <param name="serial_port" type="string" value="/dev/ttyUSB0"/>
+      <param name="serial_baudrate" type="int" value="256000"/>
+      <param name="frame_id" type="string" value="base_laser_link"/>
+      <param name="inverted" type="bool" value="false"/>
+      <param name="angle_compensate" type="bool" value="true"/>
+  </node>
+
+  <!-- Run the localization node -->
+ <node pkg="roborts_localization" type="localization_node" name="localization_node"   respawn="true" />
+  <!-- Run the global planner node -->
+  <node pkg="roborts_planning" type="global_planner_node" name="global_planner_node" respawn="true" />
+
+  <!-- Run the local planner node -->
+  <node pkg="roborts_planning" type="local_planner_node" name="local_planner_node" respawn="true" />
+
+  <node pkg="buff_infomation" type="gimbalctr" name="gimbalctr" respawn="true" />
+  <node pkg="buff_infomation" type="disablemovement" name="disablemovement" respawn="true" />
+  <node pkg="buff_infomation" type="disableshooting" name="disableshooting" respawn="true" />
+  <node pkg="buff_infomation" type="bulletsupply" name="bulletsupply" respawn="true" />
+  <node pkg="buff_infomation" type="hprecovery" name="hprecovery" respawn="true" />
+  <node pkg="robort_detection" type="traditional.py" name="armor_detection_node" respawn="true" />
+  <node pkg="sg" type="sg3" name="sg3" respawn="true" />
+  <node pkg="roborts_decision" type="robot_angel_node" name="robot_angle_node" respawn="true" />
+
+</launch>

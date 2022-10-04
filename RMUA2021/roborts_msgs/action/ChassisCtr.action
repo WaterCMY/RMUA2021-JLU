@@ -1,0 +1,6 @@
+# SHOOTING SWING = 1  DEFEND =2
+int8 model
+---
+bool finish
+---
+bool isrun

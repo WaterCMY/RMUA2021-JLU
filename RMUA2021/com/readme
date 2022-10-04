@@ -1,0 +1,3 @@
+一个发送程序节点send.cpp obj1.cpp
+一个中间处理节点zcx2.cpp obj2.cpp
+一个接受程序 do.cpp      obj3.cpp
